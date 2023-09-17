@@ -1,6 +1,7 @@
 #include "lista.h"
 #include <stddef.h>
 #include <stdlib.h>
+#define PRIMERA_POSICION 0
 
 typedef struct nodo {
 	void *elemento;
@@ -18,6 +19,50 @@ struct lista_iterador {
 	int sarasa;
 };
 
+/*
+ * Crea un nodo con todos sus campos inicializados en 0. Y luego 
+ * le asigna el valor de void* elemento. 
+ */
+struct nodo *crear_nodo(void* elemento)
+{
+	nodo_t *nuevo_nodo = calloc(1, sizeof(nodo_t));
+	if (nuevo_nodo == NULL)
+		return NULL;
+	nuevo_nodo->elemento = elemento;
+	return nuevo_nodo;
+}
+
+/*
+ * Crea un nuevo nodo con la informacion de elemento, y lo inserta en la primera posicion.
+ */
+struct lista *insertar_primera_posicion(struct lista *lista, void* elemento)
+{
+	nodo_t *nuevo_nodo = crear_nodo(elemento);
+	if (nuevo_nodo == NULL)
+		return NULL;
+
+	nuevo_nodo->siguiente = lista->nodo_inicio;
+	lista->nodo_inicio = nuevo_nodo;
+	lista->cantidad++;
+	return lista;
+}
+
+/*
+ * 
+ */
+nodo_t *recorrer_hasta_posicion(struct lista *lista, size_t posicion)
+{
+	nodo_t *aux = lista->nodo_inicio;
+	void* ptr = NULL;
+	int i = 1;
+	while (i < posicion) {
+		ptr = aux->siguiente;
+		aux = ptr;
+		i++;
+	}	
+	return aux;
+}
+
 lista_t *lista_crear()
 {
 	struct lista *lista = calloc(1, sizeof(struct lista));
@@ -26,32 +71,45 @@ lista_t *lista_crear()
 
 lista_t *lista_insertar(lista_t *lista, void *elemento)
 {
-	return NULL;
+	if (lista == NULL)
+		return NULL;
+		
+	nodo_t *nuevo_nodo = crear_nodo(elemento);
+	if (nuevo_nodo == NULL)
+		return NULL;
+
+	if (lista->cantidad == 0) {
+		lista->nodo_inicio = nuevo_nodo;
+		lista->nodo_fin = nuevo_nodo;
+	} else {
+		lista->nodo_fin->siguiente = nuevo_nodo;
+		lista->nodo_fin = nuevo_nodo;	
+	}
+	lista->cantidad++;
+	return lista;
 }
 
 lista_t *lista_insertar_en_posicion(lista_t *lista, void *elemento,
 				    size_t posicion)
 {
-	/* 
+	if (lista == NULL)
+		return NULL;
+
 	if (posicion >= lista->cantidad)
 		return lista_insertar(lista, elemento);
+	
+	if (posicion == PRIMERA_POSICION)
+		return insertar_primera_posicion(lista, elemento);
 
-	nodo_t *nuevo_nodo = calloc(1, sizeof(nodo_t));
+	nodo_t *nuevo_nodo = crear_nodo(elemento);
 	if (nuevo_nodo == NULL)
 		return NULL;
-	nuevo_nodo->elemento = elemento;
 
-	nodo_t *aux = lista->nodo_inicio;
-	int i = 0;
-	while (i < posicion) {
-		aux = lista->nodo_inicio->siguiente;
-		i++;
-	}
+	nodo_t *aux = recorrer_hasta_posicion(lista, posicion);
 	nuevo_nodo->siguiente = aux->siguiente;
 	aux->siguiente = nuevo_nodo;
 	lista->cantidad++;
-	*/
-	return NULL;
+	return lista;
 }
 
 void *lista_quitar(lista_t *lista)
@@ -87,7 +145,9 @@ void *lista_ultimo(lista_t *lista)
 
 bool lista_vacia(lista_t *lista)
 {
-	return true;
+	if (lista == NULL)
+		return true;
+	return lista->cantidad == 0 ? true : false;
 }
 
 size_t lista_tamanio(lista_t *lista)
