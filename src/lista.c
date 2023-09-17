@@ -54,8 +54,8 @@ nodo_t *recorrer_hasta_posicion(struct lista *lista, size_t posicion)
 {
 	nodo_t *aux = lista->nodo_inicio;
 	void* ptr = NULL;
-	int i = 1;
-	while (i < posicion) {
+	int i = 0;
+	while (i != posicion) {
 		ptr = aux->siguiente;
 		aux = ptr;
 		i++;
@@ -105,7 +105,7 @@ lista_t *lista_insertar_en_posicion(lista_t *lista, void *elemento,
 	if (nuevo_nodo == NULL)
 		return NULL;
 
-	nodo_t *aux = recorrer_hasta_posicion(lista, posicion);
+	nodo_t *aux = recorrer_hasta_posicion(lista, posicion-1);
 	nuevo_nodo->siguiente = aux->siguiente;
 	aux->siguiente = nuevo_nodo;
 	lista->cantidad++;
@@ -124,7 +124,13 @@ void *lista_quitar_de_posicion(lista_t *lista, size_t posicion)
 
 void *lista_elemento_en_posicion(lista_t *lista, size_t posicion)
 {
-	return NULL;
+	if (lista == NULL)
+		return NULL;
+	if (lista->cantidad <= posicion)
+		return NULL;
+
+	nodo_t *buscado = recorrer_hasta_posicion(lista, posicion);
+	return buscado->elemento;
 }
 
 void *lista_buscar_elemento(lista_t *lista, int (*comparador)(void *, void *),
