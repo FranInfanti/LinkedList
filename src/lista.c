@@ -83,7 +83,7 @@ lista_t *lista_insertar(lista_t *lista, void *elemento)
 	if (nuevo_nodo == NULL)
 		return NULL;
 
-	if (lista->cantidad == 0) 
+	if (lista->cantidad == 0)
 		lista->nodo_inicio = nuevo_nodo;
 	else
 		lista->nodo_fin->siguiente = nuevo_nodo;
@@ -110,11 +110,11 @@ lista_t *lista_insertar_en_posicion(lista_t *lista, void *elemento,
 
 	if (posicion == PRIMERA_POSICION) {
 		nuevo_nodo->siguiente = lista->nodo_inicio;
-		lista->nodo_inicio = nuevo_nodo;		
+		lista->nodo_inicio = nuevo_nodo;
 	} else {
 		anterior = recorrer_hasta_posicion(lista, posicion - 1);
 		nuevo_nodo->siguiente = anterior->siguiente;
-		anterior->siguiente = nuevo_nodo;		
+		anterior->siguiente = nuevo_nodo;
 	}
 	lista->cantidad++;
 
@@ -136,11 +136,12 @@ void *lista_quitar(lista_t *lista)
 
 	if (lista->cantidad == 0) {
 		lista->nodo_inicio = NULL;
-		lista->nodo_fin = NULL;	
+		lista->nodo_fin = NULL;
 	} else {
-		nodo_t *ultimo_nodo = recorrer_hasta_posicion(lista, lista->cantidad - 1);
+		nodo_t *ultimo_nodo =
+			recorrer_hasta_posicion(lista, lista->cantidad - 1);
 		ultimo_nodo->siguiente = NULL;
-		lista->nodo_fin = ultimo_nodo;		
+		lista->nodo_fin = ultimo_nodo;
 	}
 
 	return elemento_removido;
@@ -154,23 +155,23 @@ void *lista_quitar_de_posicion(lista_t *lista, size_t posicion)
 	if (lista->cantidad == 0)
 		return NULL;
 
-	if (posicion >= lista->cantidad-1)
+	if (posicion >= lista->cantidad - 1)
 		return lista_quitar(lista);
-	
+
 	nodo_t *nodo_removido = NULL;
 
 	if (posicion == PRIMERA_POSICION) {
 		nodo_removido = lista->nodo_inicio;
 		lista->nodo_inicio = nodo_removido->siguiente;
 	} else {
-		nodo_t *anterior = recorrer_hasta_posicion(lista, posicion-1);
+		nodo_t *anterior = recorrer_hasta_posicion(lista, posicion - 1);
 		nodo_removido = anterior->siguiente;
 		anterior->siguiente = nodo_removido->siguiente;
 	}
-	
-	void* elemento_removido = nodo_removido->elemento;
+
+	void *elemento_removido = nodo_removido->elemento;
 	free(nodo_removido);
-	lista->cantidad--;		
+	lista->cantidad--;
 
 	return elemento_removido;
 }
@@ -222,7 +223,7 @@ bool lista_vacia(lista_t *lista)
 {
 	if (lista == NULL)
 		return true;
-	return lista->cantidad == 0 ? true : false;
+	return lista->cantidad == 0;
 }
 
 size_t lista_tamanio(lista_t *lista)
