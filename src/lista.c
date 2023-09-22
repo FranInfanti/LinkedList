@@ -16,8 +16,8 @@ struct lista {
 };
 
 struct lista_iterador {
-	//y acá?
-	int sarasa;
+	struct lista *lista;
+	nodo_t *actual;
 };
 
 /*
@@ -39,11 +39,9 @@ struct nodo *crear_nodo(void *elemento)
 nodo_t *recorrer_hasta_posicion(struct lista *lista, size_t posicion)
 {
 	nodo_t *nodo = lista->nodo_inicio;
-	void *aux = NULL;
 	int i = 0;
 	while (i != posicion) {
-		aux = nodo->siguiente;
-		nodo = aux;
+		nodo = nodo->siguiente;
 		i++;
 	}
 	return nodo;
@@ -251,30 +249,65 @@ void lista_destruir_todo(lista_t *lista, void (*funcion)(void *))
 
 lista_iterador_t *lista_iterador_crear(lista_t *lista)
 {
-	return NULL;
+	if (lista == NULL)
+		return NULL;
+
+	struct lista_iterador *iterador = malloc(sizeof(struct lista_iterador));
+	if (iterador == NULL)
+		return NULL;
+	iterador->lista = lista;
+	iterador->actual = lista->nodo_inicio;
+	return iterador;
 }
 
 bool lista_iterador_tiene_siguiente(lista_iterador_t *iterador)
 {
-	return false;
+	if (iterador == NULL)
+		return false;
+	if (iterador->actual == NULL)
+		return false;
+
+	return true;
 }
 
 bool lista_iterador_avanzar(lista_iterador_t *iterador)
 {
-	return false;
+	if (iterador == NULL || iterador->lista->cantidad == 0)
+		return false;
+	if (iterador->actual == NULL)
+		return false;
+	iterador->actual = iterador->actual->siguiente;
+	return iterador->actual != NULL ? true : false;
 }
 
 void *lista_iterador_elemento_actual(lista_iterador_t *iterador)
 {
-	return NULL;
+	if (iterador == NULL)
+		return NULL;
+	if (iterador->actual == NULL)
+		return NULL;
+	return iterador->actual->elemento;
 }
 
 void lista_iterador_destruir(lista_iterador_t *iterador)
 {
+	free(iterador);
 }
 
 size_t lista_con_cada_elemento(lista_t *lista, bool (*funcion)(void *, void *),
 			       void *contexto)
 {
-	return 0;
+	if (lista == NULL || funcion == NULL)
+		return 0;
+	size_t n = 0;
+	bool sigo_aplicando = true;
+	nodo_t *actual = lista->nodo_inicio;
+
+	while (n < lista->cantidad && sigo_aplicando) {
+		if (!funcion(actual->elemento, contexto))
+			sigo_aplicando = false;
+		actual = actual->siguiente;
+		n++;
+	}
+	return n;
 }
