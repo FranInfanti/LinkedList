@@ -1,6 +1,5 @@
 #include "cola.h"
 #include "lista.h"
-#define PRIMERA_POSICION 0
 
 struct _cola_t {
 	struct nodo *nodo_inicio;
@@ -10,8 +9,7 @@ struct _cola_t {
 
 cola_t *cola_crear()
 {
-	struct _cola_t *cola = calloc(1, sizeof(struct _cola_t));
-	return cola != NULL ? cola : NULL;
+	return calloc(1, sizeof(struct _cola_t));
 }
 
 cola_t *cola_encolar(cola_t *cola, void *elemento)
@@ -26,7 +24,7 @@ cola_t *cola_encolar(cola_t *cola, void *elemento)
 
 void *cola_desencolar(cola_t *cola)
 {
-	return lista_quitar_de_posicion((void *)cola, PRIMERA_POSICION);
+	return lista_quitar_de_posicion((void *)cola, 0);
 }
 
 void *cola_frente(cola_t *cola)
