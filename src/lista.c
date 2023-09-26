@@ -228,17 +228,17 @@ size_t lista_tamanio(lista_t *lista)
 
 void lista_destruir(lista_t *lista)
 {
-	if (lista != NULL)
-		destruir_nodos(lista->nodo_inicio, lista->cantidad, false,
-			       NULL);
+	if (lista == NULL)
+		return;
+	destruir_nodos(lista->nodo_inicio, lista->cantidad, false, NULL);
 	free(lista);
 }
 
 void lista_destruir_todo(lista_t *lista, void (*funcion)(void *))
 {
-	if (lista != NULL)
-		destruir_nodos(lista->nodo_inicio, lista->cantidad, true,
-			       funcion);
+	if (lista == NULL)
+		return;
+	destruir_nodos(lista->nodo_inicio, lista->cantidad, true, funcion);
 	free(lista);
 }
 
