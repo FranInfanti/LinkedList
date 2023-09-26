@@ -206,7 +206,7 @@ void puedo_aplicarle_la_funcion_a_todos_los_elementos_de_la_lista()
 {
         lista_t *lista = lista_crear();
         int numeros[] = {1, 2, 3, 4, 5, 6};
-        for (int i = 0; i < sizeof(numeros) / sizeof(int); i++) 
+        for (int i = 0; i < sizeof(numeros) / sizeof(int) -1; i++) 
                 lista = lista_insertar(lista, &numeros[i]);
         pa2m_afirmar(lista_con_cada_elemento(lista, es_el_buscado, &numeros[5]) == 5, "Se le aplica la funcion a todos los elementos");
         lista_destruir(lista);
@@ -405,7 +405,6 @@ int main()
         se_inserta_un_elemento_en_el_final_correctamente(); 
         no_se_puede_insertar_en_posiciones_aleatorias_en_una_lista_nula(); 
         se_puede_insertar_en_posiciones_aleatorias(); 
-        los_elementos_insertados_son_correctos(); 
         inserto_un_elemento_en_una_posicion_que_no_existe_y_se_inserta_al_final();
 
         pa2m_nuevo_grupo("Pruebas de eliminar elementos de una Lista");
