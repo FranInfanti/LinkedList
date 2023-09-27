@@ -34,7 +34,7 @@ struct nodo *crear_nodo(void *elemento)
 /*
  * Recorre los nodos hasta la posicion indicada y devuelve el nodo de dicha posicion.
  */
-nodo_t *recorrer_hasta_posicion(struct lista *lista, size_t posicion)
+struct nodo *recorrer_hasta_posicion(struct lista *lista, size_t posicion)
 {
 	nodo_t *actual = lista->nodo_inicio;
 	int i = 0;
@@ -49,13 +49,12 @@ nodo_t *recorrer_hasta_posicion(struct lista *lista, size_t posicion)
  * Libera toda la memoria ocupada por los nodos. Ademas si aplico_funcion es true,
  * se le aplica la funcion a todos los elementos antes de ser eliminados.
  */
-void destruir_nodos(nodo_t *eliminar, size_t cantidad, bool aplico_funcion,
-		    void (*f)(void *))
+void destruir_nodos(nodo_t *eliminar, size_t cantidad, void (*f)(void *))
 {
 	size_t n = 0;
 	void *aux = NULL;
 	while (n < cantidad) {
-		if (aplico_funcion && f != NULL)
+		if (f != NULL)
 			f(eliminar->elemento);
 		aux = eliminar->siguiente;
 		free(eliminar);
@@ -177,6 +176,10 @@ void *lista_elemento_en_posicion(lista_t *lista, size_t posicion)
 		return NULL;
 	if (lista->cantidad <= posicion)
 		return NULL;
+	if (lista->cantidad == 0)
+		return NULL;
+	if (posicion == lista->cantidad - 1)
+		return lista->nodo_fin->elemento;
 
 	nodo_t *buscado = recorrer_hasta_posicion(lista, posicion);
 	return buscado->elemento;
@@ -230,7 +233,7 @@ void lista_destruir(lista_t *lista)
 {
 	if (lista == NULL)
 		return;
-	destruir_nodos(lista->nodo_inicio, lista->cantidad, false, NULL);
+	destruir_nodos(lista->nodo_inicio, lista->cantidad, NULL);
 	free(lista);
 }
 
@@ -238,7 +241,7 @@ void lista_destruir_todo(lista_t *lista, void (*funcion)(void *))
 {
 	if (lista == NULL)
 		return;
-	destruir_nodos(lista->nodo_inicio, lista->cantidad, true, funcion);
+	destruir_nodos(lista->nodo_inicio, lista->cantidad, funcion);
 	free(lista);
 }
 
