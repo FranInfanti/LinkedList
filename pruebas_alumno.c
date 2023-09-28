@@ -220,6 +220,48 @@ void busco_un_elemento_en_una_posicion_que_no_existe_y_no_lo_encuentro()
 	lista_destruir(lista);
 }
 
+int comparador(void *elemento1, void *elemento2)
+{
+	int *numero = elemento1;
+	int *otro_numero = elemento2;
+	if (*numero / *otro_numero == 2)
+		return 0;
+	return 1;
+}
+
+void no_puedo_buscar_un_elemento_con_un_comparador_nulo()
+{
+	lista_t *lista = lista_crear();
+	pa2m_afirmar(lista_buscar_elemento(lista, NULL, NULL) == NULL,
+		     "No se puede buscar un elemento con un comparador nulo");
+	lista_destruir(lista);
+}
+
+void busco_un_elemento_que_existe_con_un_comparador()
+{
+	lista_t *lista = lista_crear();
+	int numeros[] = { 1, 2, 3, 4, 5, 6, 7, 8 };
+	for (int i = 0; i < sizeof(numeros) / sizeof(int); i++)
+		lista = lista_insertar(lista, &numeros[i]);
+	pa2m_afirmar(
+		lista_buscar_elemento(lista, comparador, &numeros[1]) ==
+			&numeros[3],
+		"Puedo buscar un elemento con una comparador y se devuelve el correcto");
+	lista_destruir(lista);
+}
+
+void busco_un_elemento_que_no_existe_con_un_comparador()
+{
+	lista_t *lista = lista_crear();
+	int numeros[] = { 1, 2, 3, 7, 1, 20, 9, 23 };
+	for (int i = 0; i < sizeof(numeros) / sizeof(int); i++)
+		lista = lista_insertar(lista, &numeros[i]);
+	pa2m_afirmar(
+		lista_buscar_elemento(lista, comparador, &numeros[1]) == NULL,
+		"Busco un elemento que no existe con un comparador y devuelve NULL");
+	lista_destruir(lista);
+}
+
 void si_la_funcion_es_null_no_se_le_aplica_a_ningun_elemento()
 {
 	lista_t *lista = lista_crear();
@@ -480,6 +522,9 @@ int main()
 	no_puedo_buscar_elementos_en_una_posicion_en_una_lista_vacia();
 	busco_en_una_posicion_un_elemento_y_lo_encuentro();
 	busco_un_elemento_en_una_posicion_que_no_existe_y_no_lo_encuentro();
+	no_puedo_buscar_un_elemento_con_un_comparador_nulo();
+	busco_un_elemento_que_existe_con_un_comparador();
+	busco_un_elemento_que_no_existe_con_un_comparador();
 
 	pa2m_nuevo_grupo("Pruebas de Iterador Interno");
 	si_la_funcion_es_null_no_se_le_aplica_a_ningun_elemento();
