@@ -25,7 +25,7 @@ make valgrind-chanutron
 ---
 ##  Funcionamiento
 
-El funcionamiento del TDA *lista* consiste en crear una lista, utilizarla de la manera que se necesite y destruirla. La implementación que se utilizó para la lista fue la de *nodos simplemente enlazados* con una referencia al primer y último nodo. Dentro de cada nodo se almacena la dirección de memoria del nodo que le sigue, en caso de que no existe se guarda `NULL`, y el elemento que el usuario desee almacenar en la lista. En los gráficos se va a ver que los nodos están al lado de otros nodos, pero en realidad pueden estar en cualquier parte de la memoria.
+El funcionamiento del *TDA lista* consiste en crearla, utilizarla de la manera que se necesite y destruirla. La implementación que se utilizó para la lista fue la de *nodos simplemente enlazados* con una referencia al primer y último nodo. Dentro de cada nodo se almacena la dirección de memoria del nodo que le sigue, en caso de que no exista se guarda `NULL`, y el elemento que el usuario desee almacenar en la lista. En los gráficos se va a ver que los nodos están al lado de otros nodos, pero en realidad pueden estar en cualquier parte de la memoria y es por eso que guardamos la dirección de memoria del siguiente nodo.
 
 ---
 
@@ -35,7 +35,7 @@ El funcionamiento del TDA *lista* consiste en crear una lista, utilizarla de la 
 
 ---
 
-Para poder crear una lista se utiliza la función `lista_crear()`, en esta se declara un puntero `lista` que apunta a un bloque de memoria en el heap. Dicho bloque guardará el número de la cantidad de elementos que se almacenan en la lista y la dirección de memoria del primer y último nodo. De este modo la complejidad de las operaciones será mejor, estamos hablando de que al tener dos referencias podemos hacer que una operación que fuera `O(n)` pase a ser `O(1)`.
+Para poder crear una lista se reserva un bloque de memoria en el heap, el cual será apuntado por el puntero `lista`. Dicho bloque guardará el número de la cantidad de elementos que se almacenan en la lista y la dirección de memoria del primer y último nodo. Veremos que teniendo un puntero al primer y último nodo mejora la complejidad de las operaciones, estamos hablando de que operación que fuera `O(n)` pase a ser `O(1)`.
 
 ---
 
@@ -45,9 +45,9 @@ Para poder crear una lista se utiliza la función `lista_crear()`, en esta se de
 
 ---
 
-Una vez creada la lista, el usuario puede ingresar y eliminar elementos en cualquier posición de esta. Si el usuario quisiera ingresar un elemento en una posición inválida o borrar un elemento que no existe, el programa intentará insertar el elemento en la última posición de la lista o borrar el último elemento de la lista. El usuario puede guardar cualquier tipo de dato que quiera en los nodos, al programa no le afecta que este sea un *int*, *char*, *bool*, etc... Solamente se necesita que a las funciones se les pase la dirección de memoria de ese tipo de dato.
+Una vez creada la lista, el usuario puede ingresar y eliminar elementos en cualquier posición de esta. Si el usuario quisiera ingresar un elemento en una posición inválida o borrar un elemento que no existe, el programa intentará insertar el elemento en la última posición de la lista o borrar el último elemento de la lista. El usuario puede guardar cualquier tipo de dato que quiera en los nodos, al funcionamiento del programa no le afecta que este sea un *int*, *char*, *bool*, etc... Solamente se necesita que a las funciones se les pase la dirección de memoria de ese tipo de dato.
 
-Cada vez que queramos almacenar un elemento, vamos a tener que reservar un bloque de memoria en el heap, el cual será apuntado por un puntero `nodo`. En dicho bloque se guarda la dirección de memoria del elemento ingresado y la dirección de memoria del nodo que le sigue. Puede que le siga un nodo, como puede que no. Pero es muy importante que si no le sigue ninguno, que esa dirección sea `NULL`, pues sino se podría estar accediendo a un lugar de memoria que no sabemos que tiene. Como mencioné antes, se puede ingresar un elemento en cualquier parte de la lista, pero cada posición tendrá un proceso diferente. En la respuesta a la 2da pregunta teórica pueden verse los gráficos detallados de cada uno de estos procesos. Pero en general si tuviéramos un único elemento, se vería de la siguiente forma.
+Cada vez que queramos almacenar un elemento vamos a tener que reservar un bloque de memoria en el heap, el cual será apuntado por un puntero `nodo`. Como mencione antes, en ese bloque se guarda la dirección de memoria del elemento ingresado y la dirección de memoria del nodo que le sigue. Puede que le siga un nodo, como puede que no. Pero es muy importante que si no le sigue ninguno, que esa dirección sea `NULL`, pues sino se podría estar accediendo a un lugar de memoria que no sabemos que tiene. Cuando insertamos un elemento en una posición, dependiendo de cual sea, tendremos un proceso diferente. Estas posiciones "especiales" son la primera posición, en el medio o en el final. En la respuesta a la 2da pregunta teórica pueden verse los gráficos y explicaciones detalladas de cada uno de estos procesos. Pero en general si tuviéramos un único elemento, se vería de la siguiente forma.
 
 ---
 
@@ -57,23 +57,22 @@ Cada vez que queramos almacenar un elemento, vamos a tener que reservar un bloqu
 
 ---
 
-Para poder eliminar un elemento de una lista solamente debemos liberar el bloque de memoria donde esta el elemento que queremos eliminar, para liberarlo hacemos uso del puntero `nodo` que apunta a ese bloque. Pero para poder realizar esta operacion con exito y no perder ningun nodo, debemos seguir una serie de pasos. La idea general seria que deberiamos posicionarnos en el `nodo anterior` al cual queremos eliminar y guardar, en un puntero `aux`, la direccion de memoria que `nodo anterior` guarda. Esa direccion seria la del nodo siguiente, que en nuestro caso seria la direccion del nodo que almacena el elemento que queremos borrar. Antes de liberar la memoria, debemos hacer que el `nodo anterior` almacene la direccion de memoria la cual guarda el nodo que queremos borrar. Luego podemos liberar el bloque que esta siendo apuntado por `nodo eliminar` y `aux`. Tambien en la respuesta a la 2da pregunta teorica puede verse los graficos detalladamente. En general con una lista con `n` elementos se veria de la siguiente forma.
+Para poder eliminar un elemento de una lista solamente debemos liberar el bloque de memoria donde está el elemento que queremos eliminar, para liberarlo hacemos uso del puntero `nodo` que apunta a ese bloque y la función `free()`. Pero para poder realizar esta operación con éxito y no perder ningún nodo, debemos seguir una serie de pasos. La idea general sería que deberíamos posicionarnos en el `nodo anterior` al cual queremos eliminar y guardar, en un puntero `aux`, la dirección de memoria que `nodo anterior` guarda. Esa dirección sería la del nodo siguiente, que en nuestro caso sería la dirección del nodo que almacena el elemento que queremos borrar. Antes de liberar la memoria, debemos hacer que el `nodo anterior` almacene la dirección de memoria la cual guarda el nodo que queremos borrar. Luego podemos liberar el bloque que está siendo apuntado por `nodo eliminar` y `aux`. También en la respuesta a la 2da pregunta teórica puede verse los gráficos detalladamente. En general con una lista con `n` elementos se vería de la siguiente forma.
 
 ---
 
 <div align="center">
-<img width="55%" src="img/DDM3.png">
+<img width="60%" src="img/DDM3.png">
 </div>
 
 ---
 
-El usuario también puede ver cuántos elementos tiene una lista, ver si está vacía o no y buscar elementos en cualquier parte de la lista. Puede buscar un elemento según una posición o según una condición, ahora según dónde y cómo lo busque hay distintos procesos con distintas complejidades.
- - El caso con la mejor complejidad (`O(1)`) serían que el usuario quisiera ver el primer o último elemento de la lista, en ese caso lo único que se hace es usar los punteros que tiene la lista al primer y último elemento.
+El usuario también puede ver cuántos elementos tiene una lista, ver si está vacía y buscar elementos en cualquier parte de la lista. Puede buscar un elemento según una posición o según una condición, ahora según dónde y cómo lo busque hay distintos procesos con distintas complejidades.
+ - El caso con la mejor complejidad, `O(1)`, sería que el usuario quisiera ver el primer o último elemento de la lista. En este caso lo único que se hace es usar los punteros que tiene la lista al primer y último elemento.
  - Si el usuario quisiera buscar un elemento en la posición `n` o que cumpla la condición `x`, en el peor de los casos sería `O(n)`, pues debería recorrer todos los elementos de mi lista.
  - En el caso de que la lista esté vacía o la posición no exista se devolverá directamente `NULL`. Ahora en caso de que ningún elemento cumpla la condición también se devolverá `NULL`, pero tuve que recorrer toda la lista primero.
+
 Al usuario se le devolverá un puntero al tipo de dato que él haya ingresado, el después deberá hacer el casteo correspondiente para poder ver el valor de ese elemento.
-
-
 
 ---
 
@@ -84,26 +83,28 @@ Al usuario se le devolverá un puntero al tipo de dato que él haya ingresado, e
 ---
 
 Por último el usuario tiene la posibilidad de utilizar dos iteradores, uno *externo* y uno *interno*.
-- El iterador *interno* funcionaria de la siguiente manera, a la función `lista_con_cada_elemento()` se le deberá pasar la lista sobre la que se quiere iterar, la función la cual se le quiera aplicar a los elementos y un puntero, que suele utilizarse como la memoria en común que se tiene entre el usuario y la función. En este caso la función es de tipo *bool*, por lo tanto se puede decidir cuando se termina de iterar.
-- El iterador *externo* sería un conjunto de funciones, que le permiten al usuario crear una lista sin conocer como está está implementada. El iteraria como si estuviera iterando un vector. Lo primero que se debería hacer es crear un iterador externo, para eso se reserva un bloque de memoria en el heap, el cual será apuntado por el puntero `iterador`. En dicho bloque se almacena la dirección de memoria de la lista y la dirección de memoria del primer nodo de la lista. Luego una vez creada la lista, ya está apuntando al primer elemento. En caso de que no exista una lista (no tendría sentido crear el iterador), se devolverá `NULL`. Una vez tenemos creado el iterador, podemos hacer tres cosas.
+
+- El iterador *interno* funciona usando la función `lista_con_cada_elemento()`, a esta se le deberá pasar la lista sobre la que se quiere iterar, la función la cual se le quiera aplicar a los elementos y un puntero que suele utilizarse como la memoria en común que se tiene entre el usuario y la función. En este caso la función es de tipo *bool*, por lo tanto se puede decidir cuando se termina de iterar. Al finalizar la función se devolverá la cantidad de elementos a los cuales se le aplicó la función.
+
+- El iterador *externo* sería un conjunto de funciones que le permiten al usuario iterar una lista sin conocer cómo está implementada. El itera como si estuviera iterando un vector. Lo primero que se debería hacer es crear un iterador externo, para eso se reserva un bloque de memoria en el heap, el cual será apuntado por el puntero `iterador`. En dicho bloque se almacena la dirección de memoria de la lista y la dirección de memoria del primer nodo de la lista. Luego una vez creada la lista ya se está apuntando al primer elemento. En caso de que no exista una lista (no tendría sentido crear el iterador), se devolverá `NULL`. Una vez tenemos creado el iterador, podemos hacer tres cosas.
 
   - Verificar si seguimos teniendo elementos para iterar, es decir, si el `nodo actual` guarda la dirección de memoria de algún nodo. Por este motivo es por el cual mencione antes que es importante que si a un nodo no lo sigue otro, entonces que apunte a `NULL`, sino en este caso estaríamos diciendo que si tiene un siguiente cuando en realidad no es cierto.
 
   - Mostrar el elemento del nodo actual, en este caso lo único que se hace es devolver la dirección de memoria de donde está el elemento. Claramente si el nodo es `NULL`, se devolverá `NULL`, pero no hay problema si el elemento que está guardado en esa dirección de memoria es `NULL`.
 
-  - Lo último sería lo principal de la iteración, que es avanzar de elemento. Esto le permite al usuario que la dirección de memoria que hace referencia al nodo, pase al siguiente nodo. Es decir, si el `nodo actual` apuntaba al primer nodo, y ese tiene siguiente, ahora `nodo actual` apunta al siguiente de ese nodo. En el caso de que el primer nodo no tenga siguiente, se avanza el iterador igualmente. En caso de que se pueda avanzar exitosamente, se devolverá *true*, pero en caso de que se avance y el `nodo actual` sea `NULL`, se devuelve *false*. También en el caso de que falle algo se devuelve *false*.
+  - Lo último sería lo principal de la iteración, que es avanzar de elemento. Esto le permite al usuario que la dirección de memoria que hace referencia al nodo, pase al siguiente nodo. Es decir, si el `nodo actual` apuntaba al primer nodo y ese tiene siguiente, ahora `nodo actual` apunta al siguiente del primer nodo. En el caso de que el primer nodo no tenga siguiente, se avanza el iterador igualmente. En caso de que se pueda avanzar exitosamente, se devolverá *true*, pero en caso de que se avance y el `nodo actual` sea `NULL`, se devuelve *false*. También en el caso de que falle algo se devuelve *false*.
 
-  - También es muy importante que una vez que se termina de usar el iterador, debemos liberar la memoria que este ocupaba en memoria. Pero solamente la del iterador, la de la lista se elimina una vez se quiera dejar de utilizar el programa.
+- También es muy importante que una vez que se termina de usar el iterador externo, debemos liberar la memoria que este ocupaba en memoria. Pero solamente la del iterador, la de la lista se elimina una vez se quiera dejar de utilizar el programa.
 
 ---
 
 <div align="center">
-<img width="50%" src="img/DDM5.png">
+<img width="60%" src="img/DDM5.png">
 </div>
 
 ---
 
-Finalmente una vez que queramos dejar de usar el programa, debemos liberar toda la memoria utilizada por la lista. Hay dos formas "diferentes" de eliminar una lista. La primera será aplicar la función `lista_destruir()` la cual solamente libera la memoria de la lista y la otra sería aplicar `lista_destruir_todo()` la cual antes de eliminar la lista le aplica una función a cada elemento de esta. Las funciones hacen exactamente lo mismo, porque en el caso de que la función pasada por parámetro sea `NULL`, se va a seguir liberando la memoria de la listas como si fuera la función `lista_destruir()`. La forma en la que se destruiría sería ir nodo por nodo liberando la memoria, hasta que solamente quede el bloque apuntado por `lista`.
+Finalmente, una vez que queramos dejar de usar el programa, debemos liberar toda la memoria utilizada por la lista. Hay dos formas "diferentes" de eliminar una lista. La primera será aplicar la función `lista_destruir()` la cual solamente libera la memoria de la lista y la otra sería aplicar `lista_destruir_todo()` la cual antes de eliminar la lista le aplica una función a cada elemento de esta. Las funciones hacen exactamente lo mismo, porque en el caso de que la función pasada por parámetro sea `NULL`, se va a seguir liberando la memoria de la listas como si fuera la función `lista_destruir()`. La forma en la que se destruiría sería ir nodo por nodo, usando un `aux`, y liberando la memoria hasta que solamente quede el bloque apuntado por `lista`.
 
 ---
 
@@ -125,17 +126,17 @@ Finalmente se liberaría el bloque apuntado por `lista`.
 
 También se implementaron otros dos TDA, el de *pila* y *cola*. Ambos TDA utilizan las funciones de *lista*, pero tienen algunas restricciones. En ambos casos se siguió utilizando la implementación de *nodos simplemente enlazados* con una referencia al primer y último nodo.
 
-En el caso de la *pila*, también se debe crear reservando un bloque de memoria en el heap, el cual será apuntado por el puntero `pila`. Dentro de este bloque se guardarán los mismos datos que se guardaban en el de la lista. 
+En el caso de la *pila*, esta también se debe crear reservando un bloque de memoria en el heap, el cual será apuntado por el puntero `pila`. Dentro de este bloque se guardarán los mismos datos que se guardaban en el de la lista. 
 
 ---
 
 <div align="center">
-<img width="40%" src="img/DDM8.png">
+<img width="45%" src="img/DDM8.png">
 </div>
 
 ---
 
-Una diferencia fundamental, en comparación con el TDA lista, es que en este caso solamente podemos insertar, eliminar y ver el elemento que se encuentra en la posición del tope de la pila. La idea es la misma que en la lista, se recibe qué elemento se quiere insertar y se crea un nodo y se lo inserta en la última posición. Lo mismo con eliminar, voy a tener que liberar la memoria que me ocupa el nodo del tope de la lista.
+Una diferencia fundamental, en comparación con el TDA lista, es que en este caso solamente podemos insertar, eliminar y ver el elemento que se encuentra en la posición del tope de la pila. La idea es la misma que en la lista, se recibe un elemento que se quiere insertar, entonces se crea un nodo y se lo inserta en la última posición. Para el caso de eliminar voy a tener que liberar la memoria que me ocupa el nodo que se encuentra en el tope de la pila.
 
 ---
 
@@ -145,7 +146,7 @@ Una diferencia fundamental, en comparación con el TDA lista, es que en este cas
 
 ---
 
-También podemos hacer operaciones como chequear si está vacía o la cantidad de elementos que tiene. Por último y muy importante es que debemos liberar toda la memoria utilizada por la pila. El proceso para eliminar es el mismo que el de lista, solamente que en este caso no es necesario aplicarle una función a los elementos.
+También podemos hacer operaciones como chequear si está vacía o ver la cantidad de elementos que tiene. Por último y muy importante es que debemos liberar toda la memoria utilizada por la pila. El proceso para eliminar es el mismo que el de lista, solamente que en este caso no es necesario aplicarle una función a los elementos.
 
 ---
 
@@ -155,17 +156,17 @@ También podemos hacer operaciones como chequear si está vacía o la cantidad d
 
 ---
 
-En el caso de la *cola*, también debemos reservar un bloque de memoria en el heap, el cual será apuntado por el puntero `cola`. Dicho bloque guardará lo mismo que el de pila y lista.
+En el caso de la *cola* también debemos reservar un bloque de memoria en el heap, este será apuntado por el puntero `cola`. Dicho bloque guardará lo mismo que el de pila y lista.
 
 ---
 
 <div align="center">
-<img width="50%" src="img/DDM11.png">
+<img width="60%" src="img/DDM11.png">
 </div>
 
 ---
 
-Una diferencia con respecto al TDA de lista y pila, es que en este caso solamente podemos insertar elementos en la última posición de la cola. El proceso sigue siendo el mismo, creamos un nodo con la dirección de memoria del elemento que se quiere insertar y se lo inserta en la última posición de la cola. En cuanto a eliminar, solamente podemos eliminar el elemento de la primera posición de la pila. El proceso sigue siendo el mismo que el de querer eliminar un elemento de la primera posición en la lista. Y por último, si queremos ver un elemento, solamente tenemos acceso al elemento que se encuentra en la primera posición de la cola.
+Una diferencia con respecto al TDA de lista y pila, es que en este caso solamente podemos insertar elementos en la última posición de la cola. El proceso sigue siendo el mismo, creamos un nodo con la dirección de memoria del elemento que se quiere insertar y se lo inserta en la última posición. En cuanto a eliminar, solamente podemos eliminar el elemento de la primera posición de la cola. El proceso sigue siendo el mismo que el de querer eliminar un elemento de la primera posición en la lista. Y por último, si queremos ver un elemento, solamente tenemos acceso al elemento que se encuentra en la primera posición de la cola.
 
 ---
 
@@ -175,7 +176,7 @@ Una diferencia con respecto al TDA de lista y pila, es que en este caso solament
 
 ---
 
-También siguen estando las operaciones de ver si la cola está vacía o no, y ver la cantidad de elementos tenemos en esta. A su vez, cuando terminemos de utilizar el programa, debemos liberar toda la memoria utilizada. También el proceso de eliminar es el mismo que el de lista, solamente que no hace falta aplicarle una función a los elementos de esta.
+También siguen estando las operaciones de ver si la cola está vacía y ver la cantidad de elementos tenemos en esta. A su vez, cuando terminemos de utilizar el programa debemos liberar toda la memoria utilizada. El proceso de eliminar es el mismo que el de lista, solamente que no hace falta aplicarle una función a los elementos de esta.
 
 ---
 
@@ -183,6 +184,12 @@ También siguen estando las operaciones de ver si la cola está vacía o no, y v
 <img width="100%" src="img/DDM13.png">
 </div>
 
+---
+
+Por último quiero mencionar que para poder recorrer todos los nodos, utilizó una función privada `recorrer_hasta_posicion()`. La cual me permite recorrer los nodos hasta la posición que yo quiera, claramente esa posición existe. La lógica consiste en que me posiciono en el primer nodo y voy avanzando de la siguiente forma:
+ - `nodo actual` sería igual al primer nodo, si ese nodo está en la posición que busco, entonces lo devuelvo. Caso contrario hago que `nodo actual` apunte al siguiente de `nodo actual`. Y si es el elemento en la posición que busco lo devuelvo, sino repito el proceso hasta llegar a la posición indicada. (Cuando hablo de devolver, me refiero a un puntero a ese bloque que estaba buscando).
+
+Esta función es muy útil a la hora de querer insertar, eliminar y buscar un elemento.
 
 ## Respuestas a las preguntas teóricas 
 
