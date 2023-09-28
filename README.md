@@ -193,9 +193,9 @@ Esta función es muy útil a la hora de querer insertar, eliminar y buscar un el
 
 ## Respuestas a las preguntas teóricas 
 
-**1.** Una Lista, Pila y Cola son tipos de datos abstractos (TDA), los cuales nos permiten almacenar elementos de cualquier tipo de dato. Cada uno de estos TDA tienen un conjunto mínimo de operaciones, algunas son similares entre los TDA y otras no tanto. El conjunto mínimo de operaciones son los siguientes: *crear*, *destruir*, *insertar*, *eliminar*, *vacía* y *ver elemento*.
+**1.** Una Lista, Pila y Cola son tipos de datos abstractos (TDA), los cuales nos permiten almacenar elementos de cualquier tipo de dato. Cada uno de estos TDA tienen un conjunto mínimo de operaciones, los cuales son los siguientes: *crear*, *destruir*, *insertar*, *eliminar*, *vacía* y *ver elemento*.
 
-Las operaciones de *crear**, *destruir* y *vacía*, funcionan de la misma manera en los tres TDA. La función que cumplen es crear, destruir y determinar si tiene elementos una lista, cola o pila. Las que valen la pena hacer hincapié en cada TDA son la de *insertar*, *eliminar* y *ver elemento*, pues estas si son diferentes en cada uno.
+Las operaciones de *crear**, *destruir* y *vacía* funcionan de la misma manera en los tres TDA. La función que cumplen es crear, destruir y determinar si tiene elementos una lista, cola o pila. Las que valen la pena hacer hincapié en cada TDA son la de *insertar*, *eliminar* y *ver elemento*, pues estas si son diferentes en cada uno.
 
 **LISTA**: Para este TDA, se puede utilizar la implementación de lista simplemente enlazada con una referencia al primer elemento y al último.
 
@@ -207,21 +207,21 @@ Las operaciones de *crear**, *destruir* y *vacía*, funcionan de la misma manera
 
 ---
 
-- La operación de *insertar* no tiene ninguna restricción, el usuario puede insertar un elemento en cualquier parte de mi lista, si es que esta posición existe. A la hora de insertar un elemento pueden darse 3 casos diferentes.
+- La operación de *insertar* no tiene ninguna restricción, el usuario puede insertar un elemento en cualquier parte de la lista, si es que esta posición existe. A la hora de insertar un elemento pueden darse tres casos situaciones.
 
-  - *1)* El primer caso consiste en querer insertar un elemento en la primera posición de mi lista. 
+  - *1)* Insertar un elemento en la primera posición de mi lista.
 
-  - *2)* El segundo caso consiste en insertar un elemento en la última posición de mi lista.
+  - *2)* Insertar un elemento en la última posición de mi lista.
 
-  - *3)* El último caso consiste en querer insertar el elemento en una posición aleatoria, puede ser en la primera, medio o final.
+  - *3)* Insertar el elemento en una posición aleatoria, puede ser en la primera, medio o final.
 
-- Para la operación de *eliminar* tampoco nos encontramos con alguna restricción, el usuario puede eliminar elementos de cualquier posición, también si es que dicha posición existe. En esta también se pueden dar 3 casos diferentes.
+- Para la operación de *eliminar* tampoco nos encontramos con alguna restricción, el usuario puede eliminar elementos de cualquier posición, también si es que dicha posición existe. En esta también se pueden dar tres casos situaciones.
 
-  - *1)* El primer caso consiste en querer eliminar el elemento que está en la primera posición.
+  - *1)* Eliminar el elemento que está en la primera posición. 
 
-  - *2)* El segundo caso consiste en querer eliminar el elemento que se encuentra en una posición aleatoria, puede ser la primera, una cualquiera o la última.
+  - *2)* Eliminar el elemento que se encuentra en una posición aleatoria, puede ser la primera, una cualquiera o la última.
 
-  - *3)* Por último el tercer caso consiste en querer eliminar el elemento que se encuentra en la última posición.
+  - *3)* Eliminar el elemento que se encuentra en la última posición.
 
 - Por último para la operación de *ver elemento*, el usuario puede ver cualquier elemento que se encuentre en la lista.
 
@@ -261,81 +261,82 @@ Como los TDA anteriores, una cola lo que hace es almacenar elementos, pero en es
 
 - Por último la operación de *ver elemento*, consiste en que el usuario solamente puede ver el elemento que está en la primera posición.
 
-**2.** Hay distintas formas de poder implementar el TDA de lista, en este caso voy a comparar tres diferentes implementaciones: lista *simplemente enlazada*, *doblemente enlazada* y *vector dinámico*. Para cada una de estas implementaciones voy a analizar cómo se inserta, obtiene y elimina un elemento en diferentes posiciones.
+**2.** Hay distintas formas de poder implementar el TDA de lista, en este caso voy a comparar tres diferentes implementaciones: lista *simplemente enlazada*, *doblemente enlazada* y *vector dinámico*. Para cada una de estas implementaciones voy a analizar cómo se inserta, obtiene y elimina un elemento en diferentes posiciones. En el caso de los nodos, vamos a tener un puntero al primer elemento y al ultimo de la lista. No uso esa implementacion para el vector, pues no tiene sentido.
 
-Antes de empezar a explicar las operaciones, voy a mencionar por encima como funciona cada implementación. El *vector dinámico* consiste en tener un vector de un tamaño no fijo, el cual puedo ir agrandando o reduciendo a medida que se insertan o eliminan elementos. La lista *simplemente enlazada* y *doblemente enlazada* consisten en utilizar un TDA llamado nodos. Los nodos almacenan dos cosas, un elemento `(void*)` y la dirección de memoria del nodo que le sigue (en el caso de la doblemente enlazada tengo la direccion del anterior y el siguiente), pues los nodos funcionan como una especie de vector dinámico, el cual nos permite almacenar elementos sin necesidad de tener bloques contiguos de memoria libre.
+Antes de empezar a explicar las operaciones, voy a mencionar por encima como funciona cada implementación. El *vector dinámico* consiste en tener un vector de un tamaño no fijo, el cual puedo ir agrandando o reduciendo a medida que se insertan o eliminan elementos. La lista *simplemente enlazada* y *doblemente enlazada* consisten en utilizar un TDA llamado nodos. Los nodos almacenan un elemento `(void*)` y la dirección de memoria del nodo que le sigue (en el caso de la doblemente enlazada tengo la direccion del anterior y el siguiente), pues los nodos funcionan como una especie de vector dinámico, el cual nos permite almacenar elementos sin necesidad de tener bloques contiguos de memoria libre.
+
 La forma la cual tendrán estas implementaciones sería la siguiente:
 
 ---
 
 <div align="center">
-<img width="80%" src="img/implementaciones.png">
+<img width="100%" src="img/implementaciones.png">
 </div>
 
 ---
 
 Si queremos insertar, eliminar o ver un elemento en una lista, se pueden dar 3 casos diferentes:
 
-- El primero sería insertar un elemento en la primera posición de nuestra lista. En el caso de la lista *simplemente enlazada* lo que debemos hacer es usar la referencia de `nodo_inicio` para hacer que `nodo_nuevo` apunte a donde estaba apuntando `nodo_inicio`, luego `nodo_inicio` debe apuntar a `nuevo_nodo`. Para la *doblemente enlazada* se realiza una operación similar, con la única diferencia de que `nodo_primero` apunta a `nodo_nuevo`. La complejidad de estos casos es `O(1)`, pues lo único que estamos haciendo son operaciones simples, como asignar nuevas direcciones de memoria a punteros. En cuanto al caso del *vector dinámico* lo que debemos hacer, en el peor de los casos, es agrandar el bloque de memoria usando `realloc()`. Por lo tanto estamos realizando una operación de `O(n)`. Además debemos correr todos los elementos un lugar a la derecha, a partir de la primera posición, para así poder "dejarle el lugar" al nuevo elemento (otra operación `O(n)`). Pero finalmente la complejidad total de insertar seria `O(n)`, la cual es peor a la de la implementación de *simplemente enlazada* y  *doblemente enlazada*.
+- El primero sería insertar un elemento en la primera posición de nuestra lista. En el caso de la lista *simplemente enlazada* lo que debemos hacer es usar el puntero `nodo_inicio` para hacer que `nodo_nuevo` apunte a donde esta apuntando `nodo_inicio`, luego `nodo_inicio` debe apuntar a `nuevo_nodo`. Para la *doblemente enlazada* se realiza una operación similar, con la única diferencia de que `nodo_primero` apunta a `nodo_nuevo`. La complejidad de estos casos es `O(1)`, pues lo único que estamos haciendo son operaciones simples, como asignar nuevas direcciones de memoria a punteros. En cuanto al caso del *vector dinámico* lo que debemos hacer, en el peor de los casos, es agrandar el bloque de memoria usando `realloc()`. Por lo tanto estamos realizando una operación `O(n)`. Además debemos correr todos los elementos un lugar a la derecha a partir de la primera posición para así poder "dejarle el lugar" al nuevo elemento, otra operación `O(n)`. Pero finalmente la complejidad total de insertar seria `O(n)`, pues terminaria siendo una suma de operaciones `O(n)`. Aun asi, veamos que es peor a la implementación de *simplemente enlazada* y  *doblemente enlazada*.
 
 ---
 
 <div align="center">
-<img width="80%" src="img/insertar_principio.png">
+<img width=100%" src="img/insertar_principio.png">
 </div>
 
 ---
 
-- En cuanto a querer eliminar un elemento, en la lista *simplemente enlazada*, usamos la referencia que tiene `nodo_inicio` al `nodo_primero` y hacemos que un puntero `aux` apunte a `nodo_primero`. Luego `nodo_primero` debe apuntar al siguiente de `nodo_inicio`. En el caso de la *doblemente enlazada* también es muy similar el proceso, solo que ahora no necesitamos usar un `aux`, directamente accedemos a `nodo_eliminar` y hacemos que `nodo_inicio` apunte a `nodo_primero`, luego `nodo_primero` apunta a `NULL`.En ambas implementaciones la complejidad total seria `O(1)`, pues solamente estamos haciendo operaciones simples. Ahora en el caso de la implementación de *vector dinámico*, lo que deberíamos hacer es eliminar el elemento que está en la primera posición y luego mover todos los elementos restantes un lugar a la izquierda. También nuevamente debemos usar `realloc()`. Por lo tanto la complejidad de toda esta operación es `O(n)`, luego veamos que también es peor en comparación con la implementación de nodos.
+- En cuanto a querer eliminar un elemento, en la lista *simplemente enlazada* usamos el puntero `nodo_inicio` y hacemos que un puntero `aux` apunte a `nodo_primero`. Luego `nodo_inicio` debe apuntar al siguiente de `nodo_primero`. En el caso de la *doblemente enlazada* también es muy similar el proceso, solo que ahora no necesitamos usar un `aux`. Ahora usando `nodo_inicio` accedemos a `nodo_eliminar` y hacemos que `nodo_inicio` apunte al siguiente de `nodo_eliminar`, luego el puntero por izquierda de del siguiente a `nodo_eliminar` debe apuntar a `NULL`. En ambas implementaciones la complejidad total seria `O(1)`, pues solamente estamos haciendo operaciones simples. Ahora en el caso de la implementación de *vector dinámico*, lo que deberíamos hacer es eliminar el elemento que está en la primera posición y luego mover todos los elementos restantes un lugar a la izquierda. A su vez nuevamente debemos usar `realloc()`. Por lo tanto la complejidad de toda esta operación es `O(n)`, luego veamos que también es peor en comparación con la implementación de nodos.
 
 ---
 
 <div align="center">
-<img width="80%" src="img/eliminar_principio.png">
+<img width="100%" src="img/eliminar_principio.png">
 </div>
 
 ---
 
-- Por último, si queremos ver un elemento en la primera posición. Para todas las implementaciones la complejidad es `O(1)`, pues lo único que debemos hacer es ir a una dirección de memoria del primer elemento, de esta en los tres casos tenemos una referencia directa.
+- Por último, si queremos ver un elemento en la primera posición, para todas las implementaciones la complejidad es `O(1)`. Pues lo único que debemos hacer acceder a la dirección de memoria del primer elemento, de esta en los tres casos tenemos una puntero directo. En el caso de los nodos `nodo_inicio` y en el del vector solo basta con hacer `vector[0]`.
 
-- El segundo caso sería querer insertar un elemento en la posición `n`. En la lista *simplemente enlazada* lo que debemos hacer es recorrer los nodos hasta llegar a `n-1`, sería el anterior a donde queremos insertar. Ahora`nodo_nuevo` debe apuntar a donde está apuntando `nodo_anterior`, y `nodo_anterior` debe apuntar a `nodo_nuevo`. En la lista *doblemente enlazada* también es muy similar el proceso, la única diferencia es que ahora debemos hacer que `nuevo_nodo` apunte a `nodo_anterior` y`nodo_siguiente`, y viceversa. Veamos que para esta implementación la complejidad `O(n)`, pues debemos recorrer hasta la posición `n-1` y hacer algunas operaciones simples que no aportan al tamaño del problema. Por último para el *vector dinámico* debemos agrandar nuevamente el bloque de memoria con `realloc()` y mover todos los elementos un lugar a la derecha, a partir la posición `n`, para así poder insertar el nuevo elemento. Por lo tanto en este caso también la complejidad sería `O(n)`, pero si lo comparamos con la  implementación de nodos esta resulta ser peor, pues realizamos 3 operaciones de `O(n)`
+- El segundo caso sería querer insertar un elemento en la posición `n`. En la lista *simplemente enlazada* lo que debemos hacer es recorrer los nodos hasta llegar a `n-1`, sería el anterior a donde queremos insertar. Ahora `nodo_nuevo` debe apuntar a donde está apuntando `nodo_anterior` y `nodo_anterior` debe apuntar a `nodo_nuevo`. En la lista *doblemente enlazada* también es muy similar el proceso, la única diferencia es que ahora debemos hacer que `nuevo_nodo` apunte a `nodo_anterior`, `nodo_siguiente`, y viceversa. Veamos que para esta implementación la complejidad es `O(n)`, pues debemos recorrer hasta la posición `n-1` y hacer algunas operaciones simples que no aportan al tamaño del problema. Para el *vector dinámico* debemos agrandar nuevamente el bloque de memoria con `realloc()` y mover todos los elementos un lugar a la derecha a partir la posición `n`, para así poder insertar el nuevo elemento. Por lo tanto en este caso también la complejidad sería `O(n)`, pero si lo comparamos con la  implementación de nodos esta resulta ser peor, pues realizamos tres operaciones de `O(n)`.
 
 ---
 
 <div align="center">
-<img width="80%" src="img/insertar_medio.png">
+<img width="100%" src="img/insertar_medio.png">
 </div>
 
 ---
 
-- Para eliminar un elemento en la posición `n`, en la lista *simplemente enlazada* debemos recorrer hasta `n-1` y usar `nodo_anterior` para que un `aux` apunte a `nodo_eliminar`. Antes de eliminarlo debemos hacer que `nodo_anterior` apunte a donde estaba apuntado `nodo_eliminar`. En la lista *doblemente enlazada* debemos hacer lo mismo solo que ahora recorremos hasta la posición `n` y usando las referencias que tiene `nodo_eliminar` para que los nodos que tiene a su lado se apunten entre sí. Veamos que para ambos casos la operación es `O(n)`, pues en el peor de los casos recorremos hasta la `n`, `n-1` posición de la lista. Ahora viendo el caso del *vector dinámico* lo que habría que hacer es recorrer hasta la posición `n` y pisarla con el elemento de la posición `n+1` y así a `n+1` lo pisamos con `n+2`. Luego debemos mover todos los elementos a una posición a la izquierda y por último usar `realloc()`. Pero aún así, veamos que la operación es `O(n)`, pero si lo comparamos con las implementaciones de nodos esta es peor porque debemos recorrer el vector dos veces, aunque ambas por separado.
+- Para eliminar un elemento en la posición `n`, en la lista *simplemente enlazada* debemos recorrer hasta el `nodo_anterior` a la posicion donde queremos insertar, es decir, `n-1`. Luego un puntero `aux` debe apuntar al siguiente de `nodo_anterior`, es decir, a `nodo_eliminar`. Antes de eliminarlo debemos hacer que `nodo_anterior` apunte a donde esta apuntado `nodo_eliminar`. En la lista *doblemente enlazada* debemos hacer lo mismo solo que ahora recorremos hasta la posición `n` y usando los punteros al anterior y al siguiente que tiene `nodo_eliminar`, hacemos que los nodos que tiene a su lado se apunten entre sí. Luego podemos eliminar el `nodo_eliminar` sin perder ningun nodo. Notemos que no hizo falta nigun puntero `aux` para la lista *doblemente enlazada*. Tambien veamos que para ambos casos la operación es `O(n)`, pues en el peor de los casos recorremos hasta la `n` / `n-1` posición de la lista. Ahora viendo el caso del *vector dinámico* lo que habría que hacer es recorrer hasta la posición `n` y pisarla con el elemento de la posición `n+1` y a `n+1` lo pisamos con `n+2`. Luego debemos mover todos los elementos a una posición a la izquierda y por último usar `realloc()`. Luego la complejidad de la operación es `O(n)`. Entonces si lo comparamos con las implementaciones de nodos esta es peor porque debemos recorrer el vector dos veces, aunque ambas por separado.
 
 ---
 
 <div align="center">
-<img width="80%" src="img/eliminar_medio.png">
+<img width="100%" src="img/eliminar_medio.png">
 </div>
 
 ---
 
 - Si queremos ver un elemento en la posición del medio, en todos los casos debemos recorrer hasta la posición `n`. Así que la complejidad para todos sería `O(n)`.
 
-- El último caso consiste en querer insertar un elemento en la última posición de la lista. En la lista *simplemente enlazada* lo que debemos hacer es utilizar la referencia de `nodo_fin` para poder ir hasta la última posición de nuestra lista y hacer que el `nodo_ultimo` apunte a `nuevo_nodo` y luego hacemos que `nodo_fin` apunte a `nuevo_nodo`. Ahora con la lista *doblemente enlazada* el proceso es el mismo solo que ahora `nuevo_nodo` debe apuntar a `nodo_utlimo`. Observemos que la complejidad vuelve a ser `O(1)`, pues solo estamos haciendo operaciones simples. Por último usando el *vector dinámico*, debemos agrandar el bloque de memoria usando `realloc()` y después recorrer todo el vector hasta la última posición e insertar el elemento. Entonces en este caso la complejidad sigue siendo `O(n)`, la cual es peor a las dos implementaciones previas.
+- El último caso consiste en querer insertar un elemento en la última posición. En la lista *simplemente enlazada* lo que debemos hacer es utilizar el puntero `nodo_fin` para poder ir hasta la última posición de nuestra lista y hacer que el `nodo_ultimo` apunte a `nuevo_nodo` y luego hacemos que `nodo_fin` apunte a `nuevo_nodo`. Ahora con la lista *doblemente enlazada* el proceso es el mismo solo que ahora `nuevo_nodo` debe apuntar a `nodo_utlimo`. Observemos que la complejidad vuelve a ser `O(1)`, pues solo estamos haciendo operaciones simples. Por último usando el *vector dinámico*, debemos agrandar el bloque de memoria usando `realloc()` y después ir hasta la última posición del vector e insertar el elemento. Entonces en este caso la complejidad sigue siendo `O(n)` (por el uso del `realloc()`) la cual es peor a las dos implementaciones previas.
 
 ---
 
 <div align="center">
-<img width="80%" src="img/insertar_final.png">
+<img width="100%" src="img/insertar_final.png">
 </div>
 
 ---
 
-- Si queremos eliminar un elemento de la posición del final, en la lista *simplemente enlazada* debemos recorrer hasta la posición `n-1`, `nodo_anterior`, y hacer que un puntero `aux` apunte a `nodo_ultimo`. Luego modificamos que `nodo_anterior` apunte a `NULL` y después debemos recorrer todos los nodos hasta el último, para que `nodo_fin` apunte al nuevo último nodo. Ahora para la lista *doblemente enlazada* solamente usamos la referencia de `nodo_fin` al `nodo_ultimo` y usando la referencia que tiene este al `nodo_anterior`, hacemos que `nodo_fin` apunte a `nodo_anterior`. En este caso si hay una diferencia de complejidad entre las implementaciones con nodos, pues para la *simplemente enlazada* la complejidad es `O(n)`, mientras que para la *doblemente enlazada* es `O(1)`. Para la implementación de *vector dinámico* usamos directamente `realloc()`. Luego en este caso la complejidad sería `O(n)`, únicamente por haber usado `realloc()`. Veamos que la mejor implementación en este caso sería la lista *doblemente enlazada*, y la de *vector dinámico* tiene la misma complejidad que *simplemente enlazada*.
+- Si queremos eliminar un elemento de la posición del final, en la lista *simplemente enlazada* debemos recorrer hasta el`nodo_anterior`, que seria la posicion `n-1`. Y hacer que un puntero `aux` apunte a `nodo_ultimo`. Luego modificamos que `nodo_anterior` apunte a `NULL` y después debemos recorrer todos los nodos hasta el último, para hacer que `nodo_fin` apunte al nuevo último nodo. Ahora para la lista *doblemente enlazada* solamente usamos el puntero `nodo_fin` para acceder al `nodo_ultimo` y usando el puntero que tiene este al `nodo_anterior`, hacemos que `nodo_fin` apunte a `nodo_anterior`. En este caso si hay una diferencia de complejidad entre las implementaciones con nodos, pues para la *simplemente enlazada* la complejidad es `O(n)`, mientras que para la *doblemente enlazada* es `O(1)`. Para la implementación de *vector dinámico* usamos directamente `realloc()`. Luego en este caso la complejidad sería `O(n)`, únicamente por haber usado `realloc()`. Veamos que la mejor implementación en este caso sería la lista *doblemente enlazada* y la de *vector dinámico* tiene la misma complejidad que *simplemente enlazada*.
 
 ---
 
 <div align="center">
-<img width="80%" src="img/eliminar_final.png">
+<img width="100%" src="img/eliminar_final.png">
 </div>
 
 ---
