@@ -24,7 +24,7 @@ struct lista_iterador {
  */
 struct nodo *crear_nodo(void *elemento)
 {
-	nodo_t *nuevo = calloc(1, sizeof(nodo_t));
+	struct nodo *nuevo = calloc(1, sizeof(nodo_t));
 	if (nuevo == NULL)
 		return NULL;
 	nuevo->elemento = elemento;
@@ -36,7 +36,7 @@ struct nodo *crear_nodo(void *elemento)
  */
 struct nodo *recorrer_hasta_posicion(struct lista *lista, size_t posicion)
 {
-	nodo_t *actual = lista->nodo_inicio;
+	struct nodo *actual = lista->nodo_inicio;
 	int i = 0;
 	while (i != posicion) {
 		actual = actual->siguiente;
@@ -46,8 +46,8 @@ struct nodo *recorrer_hasta_posicion(struct lista *lista, size_t posicion)
 }
 
 /*
- * Libera toda la memoria ocupada por los nodos. Ademas si aplico_funcion es true,
- * se le aplica la funcion a todos los elementos antes de ser eliminados.
+ * Libera toda la memoria ocupada por los nodos. Ademas se aplica la funcion (f)
+ * en caso de no ser NULL.
  */
 void destruir_nodos(nodo_t *eliminar, size_t cantidad, void (*f)(void *))
 {
@@ -73,7 +73,7 @@ lista_t *lista_insertar(lista_t *lista, void *elemento)
 	if (lista == NULL)
 		return NULL;
 
-	nodo_t *nuevo = crear_nodo(elemento);
+	struct nodo *nuevo = crear_nodo(elemento);
 	if (nuevo == NULL)
 		return NULL;
 
@@ -92,16 +92,14 @@ lista_t *lista_insertar_en_posicion(lista_t *lista, void *elemento,
 {
 	if (lista == NULL)
 		return NULL;
-
 	if (posicion >= lista->cantidad)
 		return lista_insertar(lista, elemento);
 
-	nodo_t *nuevo = crear_nodo(elemento);
+	struct nodo *nuevo = crear_nodo(elemento);
 	if (nuevo == NULL)
 		return NULL;
 
-	nodo_t *anterior = NULL;
-
+	struct nodo *anterior = NULL;
 	if (posicion == 0) {
 		nuevo->siguiente = lista->nodo_inicio;
 		lista->nodo_inicio = nuevo;
@@ -119,11 +117,10 @@ void *lista_quitar(lista_t *lista)
 {
 	if (lista == NULL)
 		return NULL;
-
 	if (lista->cantidad == 0)
 		return NULL;
 
-	nodo_t *removido = lista->nodo_fin;
+	struct nodo *removido = lista->nodo_fin;
 	void *elemento_removido = removido->elemento;
 	free(removido);
 	lista->cantidad--;
@@ -132,7 +129,7 @@ void *lista_quitar(lista_t *lista)
 		lista->nodo_inicio = NULL;
 		lista->nodo_fin = NULL;
 	} else {
-		nodo_t *ultimo =
+		struct nodo *ultimo =
 			recorrer_hasta_posicion(lista, lista->cantidad - 1);
 		ultimo->siguiente = NULL;
 		lista->nodo_fin = ultimo;
@@ -145,20 +142,18 @@ void *lista_quitar_de_posicion(lista_t *lista, size_t posicion)
 {
 	if (lista == NULL)
 		return NULL;
-
 	if (lista->cantidad == 0)
 		return NULL;
-
 	if (posicion >= lista->cantidad - 1)
 		return lista_quitar(lista);
 
-	nodo_t *removido = NULL;
-
+	struct nodo *removido = NULL;
 	if (posicion == 0) {
 		removido = lista->nodo_inicio;
 		lista->nodo_inicio = removido->siguiente;
 	} else {
-		nodo_t *anterior = recorrer_hasta_posicion(lista, posicion - 1);
+		struct nodo *anterior =
+			recorrer_hasta_posicion(lista, posicion - 1);
 		removido = anterior->siguiente;
 		anterior->siguiente = removido->siguiente;
 	}
@@ -181,7 +176,7 @@ void *lista_elemento_en_posicion(lista_t *lista, size_t posicion)
 	if (posicion == lista->cantidad - 1)
 		return lista->nodo_fin->elemento;
 
-	nodo_t *buscado = recorrer_hasta_posicion(lista, posicion);
+	struct nodo *buscado = recorrer_hasta_posicion(lista, posicion);
 	return buscado->elemento;
 }
 
@@ -191,13 +186,11 @@ void *lista_buscar_elemento(lista_t *lista, int (*comparador)(void *, void *),
 	if (lista == NULL || comparador == NULL)
 		return NULL;
 
-	nodo_t *buscado = lista->nodo_inicio;
-	void *aux = NULL;
-	int i = 0;
+	struct nodo *buscado = lista->nodo_inicio;
+	size_t i = 0;
 	while ((i < lista->cantidad) &&
 	       comparador(buscado->elemento, contexto)) {
-		aux = buscado->siguiente;
-		buscado = aux;
+		buscado = buscado->siguiente;
 		i++;
 	}
 	return i < lista->cantidad ? buscado->elemento : NULL;
@@ -299,7 +292,7 @@ size_t lista_con_cada_elemento(lista_t *lista, bool (*funcion)(void *, void *),
 		return 0;
 	size_t elementos_aplicados = 0;
 	bool sigo_aplicando = true;
-	nodo_t *actual = lista->nodo_inicio;
+	struct nodo *actual = lista->nodo_inicio;
 
 	while (elementos_aplicados < lista->cantidad && sigo_aplicando) {
 		if (!funcion(actual->elemento, contexto))

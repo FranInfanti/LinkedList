@@ -9,8 +9,7 @@ struct _pila_t {
 
 pila_t *pila_crear()
 {
-	struct _pila_t *pila = calloc(1, sizeof(struct _pila_t));
-	return pila != NULL ? pila : NULL;
+	return calloc(1, sizeof(struct _pila_t));
 }
 
 pila_t *pila_apilar(pila_t *pila, void *elemento)
